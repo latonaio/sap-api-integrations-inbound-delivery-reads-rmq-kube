@@ -129,7 +129,7 @@ func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumen
 }
 ```
 ## Output  
-本マイクロサービスでは、[golang-logging-library](https://github.com/latonaio/golang-logging-library) により、以下のようなデータがJSON形式で出力されます。  
+本マイクロサービスでは、[golang-logging-library-for-sap](https://github.com/latonaio/golang-logging-library-for-sap) により、以下のようなデータがJSON形式で出力されます。  
 以下の sample.json の例は、SAP 入荷伝票　の　ヘッダデータ が取得された結果の JSON の例です。  
 以下の項目のうち、"ReceivingLocationTimeZone" ～ "ToPartner" は、/SAP_API_Output_Formatter/type.go 内 の Type Header {} による出力結果です。"cursor" ～ "time"は、golang-logging-library による 定型フォーマットの出力結果です。  
 
@@ -142,23 +142,23 @@ func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumen
 		{
 			"ReceivingLocationTimeZone": "UTC",
 			"ActualDeliveryRoute": "",
-			"ActualGoodsMovementDate": "/Date(1484092800000)/",
+			"ActualGoodsMovementDate": "2017-01-11T09:00:00+09:00",
 			"ActualGoodsMovementTime": "PT00H00M00S",
 			"BillingDocumentDate": "",
 			"CompleteDeliveryIsDefined": false,
 			"ConfirmationTime": "PT00H00M00S",
-			"CreationDate": "/Date(1484092800000)/",
+			"CreationDate": "2017-01-11T09:00:00+09:00",
 			"CreationTime": "PT11H32M52S",
 			"CustomerGroup": "",
 			"DeliveryBlockReason": "",
-			"DeliveryDate": "/Date(1485734400000)/",
+			"DeliveryDate": "2017-01-30T09:00:00+09:00",
 			"DeliveryDocument": "180000000",
 			"DeliveryDocumentBySupplier": "ASN#451435",
 			"DeliveryDocumentType": "EL",
 			"DeliveryIsInPlant": false,
 			"DeliveryPriority": "00",
 			"DeliveryTime": "PT22H30M00S",
-			"DocumentDate": "/Date(1484092800000)/",
+			"DocumentDate": "2017-01-11T09:00:00+09:00",
 			"GoodsIssueOrReceiptSlipNumber": "",
 			"GoodsIssueTime": "PT00H00M00S",
 			"HeaderBillgIncompletionStatus": "C",
@@ -173,7 +173,7 @@ func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumen
 			"HeaderWeightUnit": "KG",
 			"IncotermsClassification": "",
 			"IsExportDelivery": "",
-			"LastChangeDate": "/Date(1484092800000)/",
+			"LastChangeDate": "2017-01-11T09:00:00+09:00",
 			"LoadingDate": "",
 			"LoadingPoint": "",
 			"LoadingTime": "PT00H00M00S",
@@ -211,6 +211,6 @@ func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumen
 			"to_Item": "https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_INBOUND_DELIVERY_SRV;v=0002/A_InbDeliveryHeader('180000000')/to_DeliveryDocumentItem"
 		}
 	],
-	"time": "2022-01-10T10:43:59.499612+09:00"
+	"time": "2022-01-27T21:36:47+09:00"
 }
 ```
