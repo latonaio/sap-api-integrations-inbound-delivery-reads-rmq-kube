@@ -50,16 +50,18 @@ func callProcess(caller *sap_api_caller.SAPAPICaller, msg rabbitmq.RabbitmqMessa
 			return
 		}
 	}()
-	deliveryDocument, deliveryDocumentItem := extractData(msg.Data())
+	deliveryDocument, deliveryDocumentItem, referenceSDDocument, referenceSDDocumentItem := extractData(msg.Data())
 	accepter := getAccepter(msg.Data())
-	caller.AsyncGetInboundDelivery(deliveryDocument, deliveryDocumentItem, accepter)
+	caller.AsyncGetInboundDelivery(deliveryDocument, deliveryDocumentItem, referenceSDDocument, referenceSDDocumentItem, accepter)
 	return nil
 }
 
-func extractData(data map[string]interface{}) (deliveryDocument, deliveryDocumentItem string) {
+func extractData(data map[string]interface{}) (deliveryDocument, deliveryDocumentItem, referenceSDDocument, referenceSDDocumentItem string) {
 	sdc := sap_api_input_reader.ConvertToSDC(data)
 	deliveryDocument = sdc.InboundDelivery.DeliveryDocument
 	deliveryDocumentItem = sdc.InboundDelivery.DeliveryDocumentItem.DeliveryDocumentItem
+	referenceSDDocument = sdc.InboundDelivery.DeliveryDocumentItem.ReferenceSDDocument
+	referenceSDDocumentItem = sdc.InboundDelivery.DeliveryDocumentItem.ReferenceSDDocumentItem
 	return
 }
 
@@ -72,7 +74,7 @@ func getAccepter(data map[string]interface{}) []string {
 
 	if accepter[0] == "All" {
 		accepter = []string{
-			"Header", "Item",
+			"Header", "Item", "PurchaseOrder",
 		}
 	}
 	return accepter

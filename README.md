@@ -68,8 +68,10 @@ sap-api-integrations-inbound-delivery-reads-rmq-kube において、API への�
 
 ### SDC レイアウト
 
-* inoutSDC.InboundDelivery.DeliveryDocument（入荷伝票）
-* inoutSDC.InboundDelivery.DeliveryDocumentItem.DeliveryDocumentItem（入荷伝票明細）
+* inputSDC.InboundDelivery.DeliveryDocument（入荷伝票）
+* inputSDC.InboundDelivery.DeliveryDocumentItem.DeliveryDocumentItem（入荷伝票明細）
+* inputSDC.InboundDelivery.DeliveryDocumentItem.ReferenceSDDocument（参照SD伝票）
+* inputSDC.InboundDelivery.DeliveryDocumentItem.ReferenceSDDocumentItem（参照SD伝票明細）
 
 ## SAP API Bussiness Hub の API の選択的コール
 
@@ -79,10 +81,10 @@ Latona および AION の SAP 関連リソースでは、Inputs フォルダ下�
 * sample.jsonの記載例(1)  
 
 accepter において 下記の例のように、データの種別（＝APIの種別）を指定します。  
-ここでは、"Header" が指定されています。    
-  
+ここでは、"Header" が指定されています。
+
 ```
-	"api_schema": "sap.s4.beh.inbounddelivery.v1.InboundDelivery.Created.v1",
+	"api_schema": "SAPInboundDeliveryReads",
 	"accepter": ["Header"],
 	"delivery_document": "180000000",
 	"deleted": ""
@@ -93,8 +95,8 @@ accepter において 下記の例のように、データの種別（＝APIの�
 全データを取得する場合、sample.json は以下のように記載します。  
 
 ```
-	"api_schema": "sap.s4.beh.inbounddelivery.v1.InboundDelivery.Created.v1",
-	"accepter": ["Item"],
+	"api_schema": "SAPInboundDeliveryReads",
+	"accepter": ["All"],
 	"delivery_document": "180000000",
 	"deleted": ""
 ```
@@ -105,7 +107,7 @@ accepter における データ種別 の指定に基づいて SAP_API_Caller �
 caller.go の func() 毎 の 以下の箇所が、指定された API をコールするソースコードです。  
 
 ```
-func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumentItem string, accepter []string) {
+func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumentItem, referenceSDDocument, referenceSDDocumentItem string, accepter []string) {
 	wg := &sync.WaitGroup{}
 	wg.Add(len(accepter))
 	for _, fn := range accepter {
@@ -120,6 +122,11 @@ func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumen
 				c.Item(deliveryDocument, deliveryDocumentItem)
 				wg.Done()
 			}()
+		case "PurchaseOrder":
+			func() {
+				c.PurchaseOrder(referenceSDDocument, referenceSDDocumentItem)
+				wg.Done()
+			}()
 		default:
 			wg.Done()
 		}
@@ -128,6 +135,7 @@ func (c *SAPAPICaller) AsyncGetInboundDelivery(deliveryDocument, deliveryDocumen
 	wg.Wait()
 }
 ```
+
 ## Output  
 本マイクロサービスでは、[golang-logging-library-for-sap](https://github.com/latonaio/golang-logging-library-for-sap) により、以下のようなデータがJSON形式で出力されます。  
 以下の sample.json の例は、SAP 入荷伝票　の　ヘッダデータ が取得された結果の JSON の例です。  
